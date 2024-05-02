@@ -41,10 +41,12 @@ class AppsOnAir {
         _printWarning(
             "set showNativeUI = 'false' to show custom ui in setAppId() or/else remove custom widget from checkForAppUpdate() method");
       }
-      FlutterAppUpdatePackagePlatform.instance.initMethod(context,
-          appId: _appId,
-          showNativeUI: _showNativeUI,
-          customWidget: customWidget);
+      FlutterAppUpdatePackagePlatform.instance.initMethod(
+        context,
+        appId: _appId,
+        showNativeUI: _showNativeUI,
+        customWidget: customWidget,
+      );
     } else {
       throw Exception(
           "Make sure you initialized AppsOnAir by calling initialize() method");

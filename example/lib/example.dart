@@ -2,8 +2,10 @@ import 'package:appsonair_flutter_sdk/apps_on_air_service.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  AppsOnAir.setAppId('*********-e640-477c-aa48-***********',
-      showNativeUI: true);
+  AppsOnAir.setAppId(
+    '*********-e640-477c-aa48-***********',
+    showNativeUI: true,
+  );
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
@@ -16,6 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     super.initState();
@@ -28,39 +31,40 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Demo App'),
         ),
-        body: const DemoAppp(),
+        body: const DemoApp(),
       ),
     );
   }
 }
 
-class DemoAppp extends StatefulWidget {
-  const DemoAppp({super.key});
+class DemoApp extends StatefulWidget {
+  const DemoApp({super.key});
 
   @override
-  State<DemoAppp> createState() => _DemoApppState();
+  State<DemoApp> createState() => _DemoAppState();
 }
 
-class _DemoApppState extends State<DemoAppp> {
+class _DemoAppState extends State<DemoApp> {
   @override
   void initState() {
     AppsOnAir.checkForAppUpdate(
       context,
-
       ///use customWidget only if you want to use Your custom ui,
       ///make sure to pass false in param [showNativeUI]
       customWidget: (response) {
-        return Column(children: [
-          Text("Application Name : ${response["appName"]}"),
-          Text(
-            "Application Version : ${response["updateData"]["androidBuildNumber"]}",
-          ),
-          MaterialButton(
-            onPressed: () {},
-          )
-        ]);
+        return Column(
+          children: [
+            Text("Application Name : ${response["appName"]}"),
+            Text(
+              "Application Version : ${response["updateData"]["androidBuildNumber"]}",
+            ),
+            MaterialButton(
+              onPressed: () {},
+            )
+          ],
+        );
       },
     );
     super.initState();

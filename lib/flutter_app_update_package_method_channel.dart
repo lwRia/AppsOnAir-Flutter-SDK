@@ -11,8 +11,9 @@ import 'flutter_app_update_package_platform_interface.dart';
 class MethodChannelFlutterAppUpdatePackage
     extends FlutterAppUpdatePackagePlatform {
   /// The method channel used to interact with the native platform.
-  late BuildContext context;
+
   bool _dialogOpen = false;
+
   @visibleForTesting
   final methodChannel = const MethodChannel('updateCheck/isUpdateAvailable');
 
@@ -28,35 +29,43 @@ class MethodChannelFlutterAppUpdatePackage
     Widget? Function(Map<String, dynamic> response)? customWidget,
   }) async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      this.context = context;
       final result = await methodChannel.invokeMethod(
-          'setApplicationID', {"AppId": appId, "showNativeUI": showNativeUI});
+        'setApplicationID',
+        {
+          "AppId": appId,
+          "showNativeUI": showNativeUI,
+        },
+      );
       if (result) {
-        _listenToNativeMethod();
+        // ignore: use_build_context_synchronously
+        _listenToNativeMethod(context);
         final appUpdateResponse = await _check();
         if (customWidget != null) {
           final widget = customWidget.call(appUpdateResponse);
 
           ///custom ui dialog
           if (!showNativeUI && widget != null) {
-            _alertDialog(widget);
+            _alertDialog(
+              context: context,
+              widget: widget,
+            );
           }
         }
       }
     });
   }
 
-  void _listenToNativeMethod() {
+  void _listenToNativeMethod(BuildContext context) {
     if (Platform.isIOS) {
       methodChannel.setMethodCallHandler((call) {
         switch (call.method) {
           case "openDialog":
-            _showIgnorePointerDialog();
+            _showIgnorePointerDialog(context);
             break;
           case "closeDialog":
             if (_dialogOpen) {
               _dialogOpen = false;
-              _closeDialog();
+              Navigator.pop(context);
             }
         }
         return Future.sync(() => _dialogOpen);
@@ -66,7 +75,7 @@ class MethodChannelFlutterAppUpdatePackage
 
   // while native dialog is open (in IOS), Flutter ui is still accessible
   // This dialog is solution for to prevent flutter ui access
-  void _showIgnorePointerDialog() {
+  void _showIgnorePointerDialog(BuildContext context) {
     if (!_dialogOpen) {
       _dialogOpen = true;
       showDialog(
@@ -81,9 +90,10 @@ class MethodChannelFlutterAppUpdatePackage
     }
   }
 
-  void _closeDialog() => Navigator.pop(context);
-
-  void _alertDialog(Widget widget) {
+  void _alertDialog({
+    required BuildContext context,
+    required Widget widget,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false,

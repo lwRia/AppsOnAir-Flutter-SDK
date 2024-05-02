@@ -1,3 +1,18 @@
 {
-    "C_Cpp.errorSquiggles": "disabled"
+    "files.autoSave": "afterDelay",
+    "cSpell.enabled": false,
+    "editor.fontSize": 12,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "editor.quickSuggestions": {
+        "comments": true,
+        "strings": true,
+        "other": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true
+    },
+    "dart.flutterSdkPath": "/Users/riya-khant-us/Downloads/flutter_3",
 }
